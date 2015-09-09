@@ -62,23 +62,15 @@ public class SessionBuilder {
 	public final static int AUDIO_AAC = 5;
 
 	// Default configuration
-//	private VideoQuality mVideoQuality = VideoQuality.DEFAULT_VIDEO_QUALITY;
 	private AudioQuality mAudioQuality = AudioQuality.DEFAULT_AUDIO_QUALITY;
 	private Context mContext;
-//	private int mVideoEncoder = VIDEO_H263; 
 	private int mAudioEncoder = AUDIO_AMRNB;
-//	private int mCamera = CameraInfo.CAMERA_FACING_BACK;
 	private int mTimeToLive = 64;
-//	private int mOrientation = 0;
 	private boolean mFlash = false;
-//	private SurfaceView mSurfaceView = null;
 	private String mOrigin = null;
 	private String mDestination = null;
 	private Session.Callback mCallback = null;
-
-	// Removes the default public constructor
 	private SessionBuilder() {}
-
 	// The SessionManager implements the singleton pattern
 	private static volatile SessionBuilder sInstance = null; 
 
@@ -104,7 +96,6 @@ public class SessionBuilder {
 	 */
 	public Session build() {
 		Session session;
-
 		session = new Session();
 		session.setOrigin(mOrigin);
 		session.setDestination(mDestination);
@@ -122,27 +113,6 @@ public class SessionBuilder {
 			session.addAudioTrack(new AMRNBStream());
 			break;
 		}
-
-		/*switch (mVideoEncoder) {
-		case VIDEO_H263:
-			session.addVideoTrack(new H263Stream(mCamera));
-			break;
-		case VIDEO_H264:
-			H264Stream stream = new H264Stream(mCamera);
-			if (mContext!=null) 
-				stream.setPreferences(PreferenceManager.getDefaultSharedPreferences(mContext));
-			session.addVideoTrack(stream);
-			break;
-		}*/
-
-/*		if (session.getVideoTrack()!=null) {
-			VideoStream video = session.getVideoTrack();
-			video.setFlashState(mFlash);
-			video.setVideoQuality(mVideoQuality);
-			video.setSurfaceView(mSurfaceView);
-			video.setPreviewOrientation(mOrientation);
-			video.setDestinationPorts(0);
-		}*/
 
 		if (session.getAudioTrack()!=null) {
 			AudioStream audio = session.getAudioTrack();
@@ -175,12 +145,6 @@ public class SessionBuilder {
 		return this;
 	}
 
-/*	*//** Sets the video stream quality. *//*
-	public SessionBuilder setVideoQuality(VideoQuality quality) {
-		mVideoQuality = quality.clone();
-		return this;
-	}*/
-	
 	/** Sets the audio encoder. */
 	public SessionBuilder setAudioEncoder(int encoder) {
 		mAudioEncoder = encoder;
@@ -193,43 +157,16 @@ public class SessionBuilder {
 		return this;
 	}
 
-/*	*//** Sets the default video encoder. *//*
-	public SessionBuilder setVideoEncoder(int encoder) {
-		mVideoEncoder = encoder;
-		return this;
-	}*/
-
 	public SessionBuilder setFlashEnabled(boolean enabled) {
 		mFlash = enabled;
 		return this;
 	}
-
-/*	public SessionBuilder setCamera(int camera) {
-		mCamera = camera;
-		return this;
-	}*/
 
 	public SessionBuilder setTimeToLive(int ttl) {
 		mTimeToLive = ttl;
 		return this;
 	}
 
-	/** 
-	 * Sets the SurfaceView required to preview the video stream. 
-	 **/
-/*	public SessionBuilder setSurfaceView(SurfaceView surfaceView) {
-		mSurfaceView = surfaceView;
-		return this;
-	}*/
-	
-	/** 
-	 * Sets the orientation of the preview.
-	 * @param orientation The orientation of the preview
-	 */
-/*	public SessionBuilder setPreviewOrientation(int orientation) {
-		mOrientation = orientation;
-		return this;
-	}	*/
 	
 	public SessionBuilder setCallback(Session.Callback callback) {
 		mCallback = callback;
@@ -256,20 +193,6 @@ public class SessionBuilder {
 		return mAudioEncoder;
 	}
 
-/*	*//** Returns the id of the {@link android.hardware.Camera} set with {@link #setCamera(int)}. *//*
-	public int getCamera() {
-		return mCamera;
-	}*/
-
-/*	*//** Returns the video encoder set with {@link #setVideoEncoder(int)}. *//*
-	public int getVideoEncoder() {
-		return mVideoEncoder;
-	}
-*/
-/*	*//** Returns the VideoQuality set with {@link #setVideoQuality(VideoQuality)}. *//*
-	public VideoQuality getVideoQuality() {
-		return mVideoQuality;
-	}*/
 	
 	/** Returns the AudioQuality set with {@link #setAudioQuality(AudioQuality)}. */
 	public AudioQuality getAudioQuality() {
@@ -280,12 +203,6 @@ public class SessionBuilder {
 	public boolean getFlashState() {
 		return mFlash;
 	}
-
-/*	*//** Returns the SurfaceView set with {@link #setSurfaceView(SurfaceView)}. *//*
-	public SurfaceView getSurfaceView() {
-		return mSurfaceView;
-	}*/
-	
 	
 	/** Returns the time to live set with {@link #setTimeToLive(int)}. */
 	public int getTimeToLive() {
@@ -297,12 +214,7 @@ public class SessionBuilder {
 		return new SessionBuilder()
 		.setDestination(mDestination)
 		.setOrigin(mOrigin)
-//		.setSurfaceView(mSurfaceView)
-//		.setPreviewOrientation(mOrientation)
-//		.setVideoQuality(mVideoQuality)
-//		.setVideoEncoder(mVideoEncoder)
 		.setFlashEnabled(mFlash)
-//		.setCamera(mCamera)
 		.setTimeToLive(mTimeToLive)
 		.setAudioEncoder(mAudioEncoder)
 		.setAudioQuality(mAudioQuality)

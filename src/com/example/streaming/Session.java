@@ -101,7 +101,6 @@ public class Session {
 	private long mTimestamp;
 
 	private AudioStream mAudioStream = null;
-//	private VideoStream mVideoStream = null;
 
 	private Callback mCallback;
 	private Handler mMainHandler;
@@ -152,15 +151,6 @@ public class Session {
 		public void onSessionError(int reason, int streamType, Exception e);
 
 		/** 
-		 * Called when the previw of the {@link VideoStream}
-		 * has correctly been started.
-		 * If an error occurs while starting the preview,
-		 * {@link Callback#onSessionError(int, int, Exception)} will be
-		 * called instead of {@link Callback#onPreviewStarted()}.
-		 */
-//		public void onPreviewStarted();
-
-		/** 
 		 * Called when the session has correctly been configured 
 		 * after calling {@link Session#configure()}.
 		 * If an error occurs while configuring the {@link Session},
@@ -188,12 +178,6 @@ public class Session {
 		mAudioStream = track;
 	}
 
-/*	*//** You probably don't need to use that directly, use the {@link SessionBuilder}. *//*
-	void addVideoTrack(VideoStream track) {
-		removeVideoTrack();
-		mVideoStream = track;
-	}*/
-
 	/** You probably don't need to use that directly, use the {@link SessionBuilder}. */
 	void removeAudioTrack() {
 		if (mAudioStream != null) {
@@ -202,23 +186,11 @@ public class Session {
 		}
 	}
 
-/*	*//** You probably don't need to use that directly, use the {@link SessionBuilder}. *//*
-	void removeVideoTrack() {
-		if (mVideoStream != null) {
-			mVideoStream.stopPreview();
-			mVideoStream = null;
-		}
-	}*/
 
 	/** Returns the underlying {@link AudioStream} used by the {@link Session}. */
 	public AudioStream getAudioTrack() {
 		return mAudioStream;
 	}
-
-	/** Returns the underlying {@link VideoStream} used by the {@link Session}. */
-/*	public VideoStream getVideoTrack() {
-		return mVideoStream;
-	}	*/
 
 	/**
 	 * Sets the callback interface that will be called by the {@link Session}.
@@ -254,43 +226,6 @@ public class Session {
 	public void setTimeToLive(int ttl) {
 		mTimeToLive = ttl;
 	}
-
-	/** 
-	 * Sets the configuration of the stream. You can call this method at any time 
-	 * and changes will take effect next time you call {@link #configure()}.
-	 * @param quality Quality of the stream
-	 */
-/*	public void setVideoQuality(VideoQuality quality) {
-		if (mVideoStream != null) {
-			mVideoStream.setVideoQuality(quality);
-		}
-	}*/
-
-	/**
-	 * Sets a Surface to show a preview of recorded media (video). 
-	 * You can call this method at any time and changes will take effect next time you call {@link #start()} or {@link #startPreview()}.
-	 */
-/*	public void setSurfaceView(final SurfaceView view) {
-		sHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mVideoStream != null) {
-					mVideoStream.setSurfaceView(view);
-				}
-			}				
-		});
-	}*/
-
-	/** 
-	 * Sets the orientation of the preview. You can call this method at any time 
-	 * and changes will take effect next time you call {@link #configure()}.
-	 * @param orientation The orientation of the preview
-	 */
-/*	public void setPreviewOrientation(int orientation) {
-		if (mVideoStream != null) {
-			mVideoStream.setPreviewOrientation(orientation);
-		}
-	}	*/
 	
 	/** 
 	 * Sets the configuration of the stream. You can call this method at any time 
@@ -335,10 +270,7 @@ public class Session {
 			sessionDescription.append(mAudioStream.getSessionDescription());
 			sessionDescription.append("a=control:trackID="+0+"\r\n");
 		}
-		/*if (mVideoStream != null) {
-			sessionDescription.append(mVideoStream.getSessionDescription());
-			sessionDescription.append("a=control:trackID="+1+"\r\n");
-		}	*/		
+	
 		return sessionDescription.toString();
 	}
 
@@ -458,22 +390,13 @@ public class Session {
 				if (getTrack(1-id) == null || !getTrack(1-id).isStreaming()) {
 					sHandler.post(mUpdateBitrate);
 				}
-			} /*catch (UnknownHostException e) {
-				postError(ERROR_UNKNOWN_HOST, id, e);
-				throw e;
-			}*/ /*catch (CameraInUseException e) {
-				postError(ERROR_CAMERA_ALREADY_IN_USE , id, e);
-				throw e;
-			}*/ catch (StorageUnavailableException e) {
+			} catch (StorageUnavailableException e) {
 				postError(ERROR_STORAGE_NOT_READY , id, e);
 				throw e;
 			} catch (ConfNotSupportedException e) {
 				postError(ERROR_CONFIGURATION_NOT_SUPPORTED , id, e);
 				throw e;
-			} /*catch (InvalidSurfaceException e) {
-				postError(ERROR_INVALID_SURFACE , id, e);
-				throw e;
-			}*/ catch (IOException e) {
+			} catch (IOException e) {
 				postError(ERROR_OTHER, id, e);
 				throw e;
 			} catch (RuntimeException e) {
@@ -529,8 +452,6 @@ public class Session {
 		if(id==0){
 			stream = mAudioStream;
 		}
-		
-//		Stream stream = id==0 ? mAudioStream : mVideoStream;
 		if (stream!=null) {
 			stream.stop();
 		}
@@ -539,109 +460,16 @@ public class Session {
 	/** Stops all existing streams in a syncronous manner. */
 	public void syncStop() {
 		syncStop(0);
-//		syncStop(1);
 		postSessionStopped();
 	}	
-/*
-	public void startPreview() {
-		sHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mVideoStream != null) {
-					try {
-						mVideoStream.configure();
-						mVideoStream.startPreview();
-						postPreviewStarted();
-					} catch (CameraInUseException e) {
-						postError(ERROR_CAMERA_ALREADY_IN_USE , STREAM_VIDEO, e);
-					} catch (ConfNotSupportedException e) {
-						postError(ERROR_CONFIGURATION_NOT_SUPPORTED , STREAM_VIDEO, e);
-					} catch (InvalidSurfaceException e) {
-						postError(ERROR_INVALID_SURFACE , STREAM_VIDEO, e);
-					} catch (RuntimeException e) {
-						postError(ERROR_OTHER, STREAM_VIDEO, e);
-					} catch (StorageUnavailableException e) {
-						postError(ERROR_STORAGE_NOT_READY, STREAM_VIDEO, e);
-					} catch (IOException e) {
-						postError(ERROR_OTHER, STREAM_VIDEO, e);
-					}
-				}
-			}
-		});
-	}*/
 
-/*	public void stopPreview() {
-		sHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mVideoStream != null) {
-					mVideoStream.stopPreview();
-				}
-			}
-		});
-	}	*/
-
-	/*public void switchCamera() {
-		sHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mVideoStream != null) {
-					try {
-						mVideoStream.switchCamera();
-						postPreviewStarted();
-					} catch (CameraInUseException e) {
-						postError(ERROR_CAMERA_ALREADY_IN_USE , STREAM_VIDEO, e);
-					} catch (ConfNotSupportedException e) {
-						postError(ERROR_CONFIGURATION_NOT_SUPPORTED , STREAM_VIDEO, e);
-					} catch (InvalidSurfaceException e) {
-						postError(ERROR_INVALID_SURFACE , STREAM_VIDEO, e);
-					} catch (IOException e) {
-						postError(ERROR_OTHER, STREAM_VIDEO, e);
-					} catch (RuntimeException e) {
-						postError(ERROR_OTHER, STREAM_VIDEO, e);
-					}
-				}
-			}
-		});
-	}*/
-
-/*	public int getCamera() {
-		return mVideoStream != null ? mVideoStream.getCamera() : 0;
-
-	}*/
-
-/*	public void toggleFlash() {
-		sHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mVideoStream != null) {
-					try {
-						mVideoStream.toggleFlash();
-					} catch (RuntimeException e) {
-						postError(ERROR_CAMERA_HAS_NO_FLASH, STREAM_VIDEO, e);
-					}
-				}
-			}
-		});
-	}	*/
 
 	/** Deletes all existing tracks & release associated resources. */
 	public void release() {
 		removeAudioTrack();
-//		removeVideoTrack();
 		sHandler.getLooper().quit();
 	}
 
-/*	private void postPreviewStarted() {
-		mMainHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				if (mCallback != null) {
-					mCallback.onPreviewStarted(); 
-				}
-			}
-		});
-	}*/
 
 	private void postSessionConfigured() {
 		mMainHandler.post(new Runnable() {
@@ -709,20 +537,32 @@ public class Session {
 			}
 		}
 	};
+	
+	public boolean trackExists(int id) {	
+		boolean isAudioStream = false;
+		isAudioStream =(id==0 && mAudioStream!=null)? true : false;	
+		return isAudioStream;
+	}
+	
+	public Stream getTrack(int id) {
+		AudioStream getAudioStream = null;
+		if (id==0)
+			getAudioStream = mAudioStream;
+		return getAudioStream;
+	}
 
-
-	public boolean trackExists(int id) {
+/*	public boolean trackExists(int id) {
 		if (id==0) 
 			return mAudioStream!=null;
-//		else
-//			return mVideoStream!=null;
+		else
+			return mVideoStream!=null;
 	}
 
 	public Stream getTrack(int id) {
 		if (id==0)
 			return mAudioStream;
-//		else
-//			return mVideoStream;
-	}
+		else
+			return mVideoStream;
+	}*/
 
 }
