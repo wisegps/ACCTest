@@ -40,7 +40,6 @@ import android.util.Log;
 public class AACADTSPacketizer extends AbstractPacketizer implements Runnable {
 
 	private final static String TAG = "AACADTSPacketizer";
-
 	private Thread t;
 	private int samplingRate = 8000;
 
@@ -159,7 +158,6 @@ public class AACADTSPacketizer extends AbstractPacketizer implements Runnable {
 					buffer[rtphl+3] |= 0x00;
 
 					send(rtphl+4+length);
-
 				}
 
 			}

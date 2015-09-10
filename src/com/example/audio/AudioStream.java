@@ -70,7 +70,6 @@ public abstract class AudioStream  extends MediaStream {
 		
 		// We need a local socket to forward data output by the camera to the packetizer
 		createSockets();
-
 		Log.v(TAG,"Requested audio with "+mQuality.bitRate/1000+"kbps"+" at "+mQuality.samplingRate/1000+"kHz");
 		
 		mMediaRecorder = new MediaRecorder();
@@ -99,8 +98,7 @@ public abstract class AudioStream  extends MediaStream {
 		} catch (IOException e) {
 			stop();
 			throw new IOException("Something happened with the local sockets :/ Start failed !");
-		}
-		
+		}	
 	}
 	
 }

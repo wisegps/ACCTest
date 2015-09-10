@@ -104,7 +104,6 @@ public class RtpSocket implements Runnable {
 			/* Byte 8,9,10,11  ->  Sync Source Identifier            */
 
 		}
-
 		try {
 			Log.d(TAG, "mLocalPort is " + mLocalPort);
 			mSocket = new MulticastSocket(mLocalPort);
@@ -114,8 +113,7 @@ public class RtpSocket implements Runnable {
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
-		}
-		
+		}	
 	}
 
 	private void resetFifo() {
@@ -222,8 +220,7 @@ public class RtpSocket implements Runnable {
 		if (mThread == null) {
 			mThread = new Thread(this);
 			mThread.start();
-		}		
-		
+		}			
 	}
 
 	/** Returns an approximation of the bitrate of the RTP stream in bit per seconde. */
@@ -356,8 +353,7 @@ public class RtpSocket implements Runnable {
 			}
 			//Log.d(TAG, "Time elapsed: "+delta);
 			return (int) (delta>0?8000*sum/delta:0);
-		}
-		
+		}	
 	}
 	
 	/** Computes the proper rate at which packets are sent. */
@@ -406,7 +402,5 @@ public class RtpSocket implements Runnable {
 			long l = (long)m-2000000;
 			return l>0 ? l : 0;
 		}
-
 	}
-
 }

@@ -132,7 +132,7 @@ public class RtspClient {
 		mTmpParameters = new Parameters();
 		mTmpParameters.port = 1935;
 		// TODO: get senerial number id
-		mTmpParameters.path = MainActivity.mSdpName;//发送到流媒体服务器的文件名字
+		mTmpParameters.path = "/acc.sdp";//发送到流媒体服务器的文件名字
 		mAuthorization = null;
 		mCallback = null;
 		mMainHandler = new Handler(Looper.getMainLooper());
@@ -344,16 +344,6 @@ public class RtspClient {
 			Log.v(TAG,"RTSP server name unknown");
 		}
 
-		//MAYBE Session id is clear when RTSP SETTUP
-/*		
-		try {
-			Matcher m = Response.rexegSession.matcher(response.headers.get("session"));
-			m.find();
-			mSessionID = m.group(1);
-		} catch (Exception e) {
-			throw new IOException("Invalid response from server. Session id: "+mSessionID);
-		}
-*/
 		if (response.status == 401) {
 			String nonce, realm;
 			Matcher m;
@@ -422,7 +412,6 @@ public class RtspClient {
 					int[] ports = stream.getDestinationPorts();
 					Log.d(TAG,"Server did not specify ports, using default ports: "+ports[0]+"-"+ports[1]);
 				}
-				
 				try {
 					m = Response.rexegSession.matcher(response.headers.get("session"));
 					m.find();
@@ -593,7 +582,6 @@ public class RtspClient {
 			matcher = regexStatus.matcher(line);
 			matcher.find();
 			response.status = Integer.parseInt(matcher.group(1));
-
 			// Parsing headers of the request
 			while ( (line = input.readLine()) != null) {
 				Log.e(TAG,"l: "+line.length()+"c: "+line);
@@ -606,9 +594,7 @@ public class RtspClient {
 				}
 			}
 			if (line==null) throw new SocketException("Connection lost");
-
 			Log.d(TAG, "Response from server: "+response.status);
-
 			return response;
 		}
 	}

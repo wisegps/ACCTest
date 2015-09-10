@@ -4,5 +4,9 @@
     <string name="app_name">ACCTest</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="cancal_settings">取消</string>
+    <string name="save_setting">保存</string>
+    <string name="config_setting">修改</string>
+    <string name="ok_setting">确定</string>
 
 </resources>

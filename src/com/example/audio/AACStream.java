@@ -100,7 +100,6 @@ public class AACStream extends AudioStream {
 		} else {
 			Log.d(TAG,"AAC supported on this phone");
 		}
-
 	}
 
 	private static boolean AACStreamingSupported() {
@@ -152,32 +151,24 @@ public class AACStream extends AudioStream {
 				mPacketizer = new AACLATMPacketizer();
 			}		
 		}
-		
 
 		if (mMode == MODE_MEDIARECORDER_API) {
-
 			testADTS();
-
 			// All the MIME types parameters used here are described in RFC 3640
 			// SizeLength: 13 bits will be enough because ADTS uses 13 bits for frame length
 			// config: contains the object type + the sampling rate + the channel number
-
 			// TODO: streamType always 5 ? profile-level-id always 15 ?
 
 			mSessionDescription = "m=audio "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
 					"a=rtpmap:96 mpeg4-generic/"+mQuality.samplingRate+"\r\n"+
 					"a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config="+Integer.toHexString(mConfig)+"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n";
-
 		} else {
-
 			mProfile = 2; // AAC LC
 			mChannel = 1;
 			mConfig = mProfile<<11 | mSamplingRateIndex<<7 | mChannel<<3;
-
 			mSessionDescription = "m=audio "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
 					"a=rtpmap:96 mpeg4-generic/"+mQuality.samplingRate+"\r\n"+
 					"a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config="+Integer.toHexString(mConfig)+"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n";			
-
 		}
 
 	}
@@ -209,7 +200,7 @@ public class AACStream extends AudioStream {
 		mMediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
 		mAudioRecord.startRecording();
 		mMediaCodec.start();
-
+		
 		final MediaCodecInputStream inputStream = new MediaCodecInputStream(mMediaCodec);
 		final ByteBuffer[] inputBuffers = mMediaCodec.getInputBuffers();
 
@@ -238,14 +229,11 @@ public class AACStream extends AudioStream {
 		});
 
 		mThread.start();
-
 		// The packetizer encapsulates this stream in an RTP stream and send it over the network
 		mPacketizer.setDestination(mDestination, mRtpPort, mRtcpPort);
 		mPacketizer.setInputStream(inputStream);
 		mPacketizer.start();
-
 		mStreaming = true;
-
 	}
 
 	/** Stops the stream. */
@@ -355,21 +343,18 @@ public class AACStream extends AudioStream {
 
 		// 5 bits for the object type / 4 bits for the sampling rate / 4 bits for the channel / padding
 		mConfig = mProfile<<11 | mSamplingRateIndex<<7 | mChannel<<3;
-
+		
 		Log.i(TAG,"MPEG VERSION: " + ( (buffer[0]&0x08) >> 3 ) );
 		Log.i(TAG,"PROTECTION: " + (buffer[0]&0x01) );
 		Log.i(TAG,"PROFILE: " + AUDIO_OBJECT_TYPES[ mProfile ] );
 		Log.i(TAG,"SAMPLING FREQUENCY: " + mQuality.samplingRate );
 		Log.i(TAG,"CHANNEL: " + mChannel );
-
 		raf.close();
-
 		if (mSettings!=null) {
 			Editor editor = mSettings.edit();
 			editor.putString(key, mQuality.samplingRate+","+mConfig+","+mChannel);
 			editor.commit();
 		}
-
 		if (!file.delete()) Log.e(TAG,"Temp file could not be erased");
 
 	}

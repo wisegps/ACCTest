@@ -9,11 +9,21 @@
     tools:context="com.example.acctest.MainActivity" >
 
     <TextView
+        android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:text="推送语音测试demo" />
+    
+    <Button 
+        android:id="@+id/setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv"
+        android:text="配置"
+        />
+    
     <Button 
         android:id="@+id/send_acc"
         android:layout_width="match_parent"
