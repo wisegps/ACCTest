@@ -23,7 +23,10 @@ public class MainActivity extends Activity implements OnClickListener{
 	private SharedPreferences pref;
 	private SharedPreferences.Editor editor;
 	
-	public static String mHost = "192.168.8.110";//流媒体服务器地址
+//	public static String mHost = "42.121.109.221";//流媒体服务器地址
+	
+	public static String mHost = "";//流媒体服务器地址
+	
 	public static String mSdpName = "/acc.sdp";  //发送到流媒体服务器的文件名字
 	private final int mHostPort = 554; //流媒体服务器的端口
 	private RtspClient mRtspClient;    // RTSP客户端

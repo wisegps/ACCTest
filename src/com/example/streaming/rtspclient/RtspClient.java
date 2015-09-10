@@ -132,7 +132,7 @@ public class RtspClient {
 		mTmpParameters = new Parameters();
 		mTmpParameters.port = 1935;
 		// TODO: get senerial number id
-		mTmpParameters.path = "/acc.sdp";//发送到流媒体服务器的文件名字
+		mTmpParameters.path = "";//发送到流媒体服务器的文件名字
 		mAuthorization = null;
 		mCallback = null;
 		mMainHandler = new Handler(Looper.getMainLooper());
