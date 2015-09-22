@@ -18,18 +18,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener{
+/** 
+* MainActivity : ä¿®æ”¹Spydroidå¼€æºæ¡†æ¶ æ¨é€è¯­éŸ³åˆ°æµåª’ä½“æœåŠ¡å™¨
+* @author wendeWu
+*  
+*/
+public class MainActivity extends Activity implements OnClickListener{ 
 	
 	private SharedPreferences pref;
-	private SharedPreferences.Editor editor;
+	private SharedPreferences.Editor editor;	
+	public static String mHost = "";//æµåª’ä½“æœåŠ¡å™¨åœ°å€
 	
-//	public static String mHost = "42.121.109.221";//Á÷Ã½Ìå·şÎñÆ÷µØÖ·
-	
-	public static String mHost = "";//Á÷Ã½Ìå·şÎñÆ÷µØÖ·
-	
-	public static String mSdpName = "/acc.sdp";  //·¢ËÍµ½Á÷Ã½Ìå·şÎñÆ÷µÄÎÄ¼şÃû×Ö
-	private final int mHostPort = 554; //Á÷Ã½Ìå·şÎñÆ÷µÄ¶Ë¿Ú
-	private RtspClient mRtspClient;    // RTSP¿Í»§¶Ë
+	public static String mSdpName = "/acc.sdp";  //å‘é€åˆ°æµåª’ä½“æœåŠ¡å™¨çš„æ–‡ä»¶åå­—
+	private final int mHostPort = 554; //æµåª’ä½“æœåŠ¡å™¨çš„ç«¯å£
+	private RtspClient mRtspClient;    // RTSPå®¢æˆ·ç«¯
 	private Session    mSession;
 
 	@Override
@@ -42,7 +44,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		mButton.setOnClickListener(this);
 		Button mBtnSet = (Button) findViewById(R.id.setting);//setting 
 		mBtnSet.setOnClickListener(this);
-		/** ´´½¨RtspClient */		
+		/** åˆ›å»ºRtspClient */		
 		mSession = 	SessionBuilder.getInstance()
 				.setContext(getApplicationContext())
 				.setAudioEncoder(SessionBuilder.AUDIO_AAC)
@@ -52,16 +54,22 @@ public class MainActivity extends Activity implements OnClickListener{
 		mRtspClient.setSession(mSession);	
 	}
 
+	/* (é Javadoc) 
+	* <p>Title: onClick</p> 
+	* <p>Description: </p> 
+	* @param v 
+	* @see android.view.View.OnClickListener#onClick(android.view.View) 
+	*/
 	@Override
 	public void onClick(View v) {
 		
 		switch(v.getId()){
 		case R.id.send_acc:
 			mHost = pref.getString("ip", "");
-			Log.e("²âÊÔÊÇÈ¡³ö",mHost);
+			Log.e("æµ‹è¯•æ˜¯å–å‡º",mHost);
 			mRtspClient.setServerAddress(mHost, mHostPort);
 			mRtspClient.setStreamPath(mSdpName);
-			mRtspClient.startStream();//¿ªÊ¼ÍÆËÍÓïÒô
+			mRtspClient.startStream();//å¼€å§‹æ¨é€è¯­éŸ³
 			break;
 		
 		case R.id.setting:
@@ -70,11 +78,11 @@ public class MainActivity extends Activity implements OnClickListener{
 			String strIP = "";
 			if(isRemember){
 				strIP = pref.getString("ip", "");
-				Log.e("²âÊÔÊÇ·ñ³É¹¦", strIP);
+				Log.e("æµ‹è¯•æ˜¯å¦æˆåŠŸ", strIP);
 				new AlertDialog.Builder(this)
-				.setTitle("ÅäÖÃ·şÎñÆ÷IP")
+				.setTitle("é…ç½®æœåŠ¡å™¨IP")
 				.setIcon(R.drawable.ic_launcher)
-				.setMessage("·şÎñÆ÷IPÒÑ¾­ÅäÖÃÍê³É:" + "\r\n" + strIP)
+				.setMessage("æœåŠ¡å™¨IPå·²ç»é…ç½®å®Œæˆ:" + "\r\n" + strIP)
 				.setNegativeButton(R.string.ok_setting, null)
 				.setPositiveButton(R.string.config_setting, 
 						new android.content.DialogInterface.OnClickListener() {
@@ -89,7 +97,7 @@ public class MainActivity extends Activity implements OnClickListener{
 				.show();				
 			}else{
 				new AlertDialog.Builder(this)
-				.setTitle("ÅäÖÃÁ÷Ã½Ìå·şÎñÆ÷µÄIP")
+				.setTitle("é…ç½®æµåª’ä½“æœåŠ¡å™¨çš„IP")
 				.setIcon(R.drawable.ic_launcher)
 				.setView(ipEdit)
 				.setPositiveButton(R.string.save_setting, 
@@ -99,13 +107,13 @@ public class MainActivity extends Activity implements OnClickListener{
 						String inputStr = ipEdit.getText().toString();
 						if("".equals(inputStr)){
 							Toast.makeText(MainActivity.this, 
-									"·şÎñÆ÷ÅäÖÃÄÚÈİ²»ÄÜÎª¿Õ", Toast.LENGTH_SHORT).show();  	
+									"æœåŠ¡å™¨é…ç½®å†…å®¹ä¸èƒ½ä¸ºç©º", Toast.LENGTH_SHORT).show();  	
 						}else{
 							editor = pref.edit();
 							editor.putBoolean("ip_save", true);
 							editor.putString("ip", inputStr);
 							editor.commit();
-							Log.e("²âÊÔÊÇ·ñ³É¹¦", inputStr);
+							Log.e("æµ‹è¯•æ˜¯å¦æˆåŠŸ", inputStr);
 						}
 					}
 				})
@@ -115,6 +123,7 @@ public class MainActivity extends Activity implements OnClickListener{
 			break;
 		}
 	}
+
 
 	@Override
 	public void onDestroy() {

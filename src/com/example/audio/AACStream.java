@@ -162,8 +162,7 @@ public class AACStream extends AudioStream {
 			mSessionDescription = "m=audio "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
 					"a=rtpmap:96 mpeg4-generic/"+mQuality.samplingRate+"\r\n" +
 					"a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config="+Integer.toHexString(mConfig) +
-					"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n" +
-					"a=control:trackID=2;\r\n";
+					"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n";
 		} else {
 			mProfile = 2; // AAC LC
 			mChannel = 1;
@@ -171,8 +170,7 @@ public class AACStream extends AudioStream {
 			mSessionDescription = "m=audio "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
 					"a=rtpmap:96 mpeg4-generic/"+mQuality.samplingRate+"\r\n" +
 					"a=fmtp:96 streamtype=5; profile-level-id=15; mode=AAC-hbr; config=" +
-					Integer.toHexString(mConfig)+"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n" +
-					"a=control:trackID=2;\r\n";			
+					Integer.toHexString(mConfig)+"; SizeLength=13; IndexLength=3; IndexDeltaLength=3;\r\n";			
 		}
 
 	}
